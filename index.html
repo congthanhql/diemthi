@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CT-EDU - Quản Lý Điểm Học Sinh</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Segoe UI,sans-serif;
+}
+
+body{
+background:#f3f6fb;
+padding:20px;
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+color:#0f3d6e;
+}
+
+.card{
+background:#fff;
+padding:15px;
+border-radius:12px;
+box-shadow:0 3px 10px rgba(0,0,0,.1);
+margin-bottom:20px;
+}
+
+input{
+padding:8px;
+border:1px solid #ccc;
+border-radius:6px;
+}
+
+button{
+padding:8px 14px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+margin:2px;
+}
+
+.add{
+background:#198754;
+color:#fff;
+}
+
+.export{
+background:#0d6efd;
+color:#fff;
+}
+
+.delete{
+background:#dc3545;
+color:#fff;
+}
+
+.student{
+margin-top:20px;
+overflow-x:auto;
+}
+
+table{
+border-collapse:collapse;
+width:100%;
+min-width:1100px;
+}
+
+th,td{
+border:1px solid #ddd;
+padding:6px;
+text-align:center;
+}
+
+th{
+background:#0f3d6e;
+color:white;
+}
+
+.subject{
+background:#eef4ff;
+font-weight:600;
+}
+
+.tbm{
+font-weight:bold;
+color:#0d6efd;
+}
+
+.avg{
+font-size:18px;
+font-weight:bold;
+color:#198754;
+margin-top:10px;
+}
+
+.header{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.score{
+width:60px;
+}
+
+@media(max-width:768px){
+body{
+padding:10px;
+}
+}
+</style>
+</head>
+
+<body>
+
+<h1>HỆ THỐNG NHẬP ĐIỂM HỌC SINH</h1>
+
+<div class="card">
+
+<div class="header">
+
+<input id="stt" placeholder="STT">
+
+<input id="hoten" placeholder="Họ và tên">
+
+<input id="ngaysinh" placeholder="Ngày sinh">
+
+<input id="gioitinh" placeholder="Giới tính">
+
+<button class="add" onclick="themHocSinh()">
+Thêm học sinh
+</button>
+
+<button class="export" onclick="xuatTXT()">
+Xuất TXT
+</button>
+
+</div>
+
+</div>
+
+<div id="dsHocSinh"></div>
+
+<script>
+
+const monHoc=[
+"Toán",
+"Ngữ Văn",
+"Tiếng Anh",
+"Lịch Sử",
+"Địa Lý",
+"Sinh Học",
+"Tin Học",
+"Kinh Tế Pháp Luật",
+"GD Thể Chất",
+"GD Quốc Phòng AN",
+"HĐ Trải Nghiệm HN"
+];
+
+let hocSinh=
+JSON.parse(localStorage.getItem("hocSinh"))||[];
+
+function luu(){
+localStorage.setItem(
+"hocSinh",
+JSON.stringify(hocSinh)
+);
+render();
+}
+
+function taoMon(){
+let obj={};
+
+monHoc.forEach(mon=>{
+obj[mon]={
+tx:[0,0,0,0],
+gk:0,
+ck:0
+};
+});
+
+return obj;
+}
+
+function themHocSinh(){
+
+let stt=
+document.getElementById("stt").value;
+
+let hoten=
+document.getElementById("hoten").value;
+
+let ngaysinh=
+document.getElementById("ngaysinh").value;
+
+let gioitinh=
+document.getElementById("gioitinh").value;
+
+if(hoten==""){
+alert("Nhập họ tên");
+return;
+}
+
+hocSinh.push({
+stt,
+hoten,
+ngaysinh,
+gioitinh,
+diem:taoMon()
+});
+
+luu();
+
+document.getElementById("hoten").value="";
+}
+
+function xoaHS(index){
+
+if(confirm("Xóa học sinh này?")){
+
+hocSinh.splice(index,1);
+
+luu();
+}
+}
+
+function tinhTBM(mon){
+
+let tong=
+Number(mon.tx[0])+
+Number(mon.tx[1])+
+Number(mon.tx[2])+
+Number(mon.tx[3])+
+Number(mon.gk)*2+
+Number(mon.ck)*3;
+
+return (tong/9).toFixed(2);
+}
+
+function tinhDTB(hs){
+
+let tong=0;
+
+monHoc.forEach(mon=>{
+tong+=parseFloat(
+tinhTBM(hs.diem[mon])
+);
+});
+
+return (
+tong/monHoc.length
+).toFixed(2);
+}
+
+function capNhat(hsIndex,mon,type,viTri,value){
+
+if(type=="tx"){
+
+hocSinh[hsIndex]
+.diem[mon]
+.tx[viTri]=Number(value);
+
+}else{
+
+hocSinh[hsIndex]
+.diem[mon][type]=Number(value);
+
+}
+
+localStorage.setItem(
+"hocSinh",
+JSON.stringify(hocSinh)
+);
+
+render();
+}
+
+function render(){
+
+let html="";
+
+hocSinh.forEach((hs,index)=>{
+
+html+=`
+
+<div class="card student">
+
+<h3>
+${hs.stt} - ${hs.hoten}
+<button
+class="delete"
+onclick="xoaHS(${index})">
+Xóa
+</button>
+</h3>
+
+<p>
+Ngày sinh:
+${hs.ngaysinh}
+|
+Giới tính:
+${hs.gioitinh}
+</p>
+
+<table>
+
+<tr>
+
+<th>Môn</th>
+
+<th>TX1</th>
+<th>TX2</th>
+<th>TX3</th>
+<th>TX4</th>
+
+<th>GK</th>
+<th>CK</th>
+
+<th>TBM</th>
+
+</tr>
+
+`;
+
+monHoc.forEach(mon=>{
+
+let d=hs.diem[mon];
+
+html+=`
+
+<tr>
+
+<td class="subject">
+${mon}
+</td>
+
+<td>
+<input
+class="score"
+type="number"
+value="${d.tx[0]}"
+oninput="capNhat(${index},'${mon}','tx',0,this.value)">
+</td>
+
+<td>
+<input
+class="score"
+type="number"
+value="${d.tx[1]}"
+oninput="capNhat(${index},'${mon}','tx',1,this.value)">
+</td>
+
+<td>
+<input
+class="score"
+type="number"
+value="${d.tx[2]}"
+oninput="capNhat(${index},'${mon}','tx',2,this.value)">
+</td>
+
+<td>
+<input
+class="score"
+type="number"
+value="${d.tx[3]}"
+oninput="capNhat(${index},'${mon}','tx',3,this.value)">
+</td>
+
+<td>
+<input
+class="score"
+type="number"
+value="${d.gk}"
+oninput="capNhat(${index},'${mon}','gk',0,this.value)">
+</td>
+
+<td>
+<input
+class="score"
+type="number"
+value="${d.ck}"
+oninput="capNhat(${index},'${mon}','ck',0,this.value)">
+</td>
+
+<td class="tbm">
+${tinhTBM(d)}
+</td>
+
+</tr>
+
+`;
+
+});
+
+html+=`
+
+</table>
+
+<div class="avg">
+
+ĐTB CHUNG:
+${tinhDTB(hs)}
+
+</div>
+
+</div>
+
+`;
+
+});
+
+document.getElementById(
+"dsHocSinh"
+).innerHTML=html;
+}
+
+function xuatTXT(){
+
+let txt="";
+
+hocSinh.forEach(hs=>{
+
+txt+=
+"================================\n";
+
+txt+=
+"HỌC SINH: "
++hs.hoten+"\n";
+
+txt+=
+"STT: "
++hs.stt+"\n";
+
+txt+=
+"Ngày sinh: "
++hs.ngaysinh+"\n";
+
+txt+=
+"Giới tính: "
++hs.gioitinh+"\n\n";
+
+monHoc.forEach(mon=>{
+
+txt+=
+mon+
+" | TBM: "+
+tinhTBM(hs.diem[mon])
++"\n";
+
+});
+
+txt+=
+"\nĐTB CHUNG: "+
+tinhDTB(hs)
++"\n\n";
+
+});
+
+let blob=
+new Blob([txt],
+{type:"text/plain"});
+
+let a=
+document.createElement("a");
+
+a.href=
+URL.createObjectURL(blob);
+
+a.download=
+"DanhSachHocSinh.txt";
+
+a.click();
+}
+
+render();
+
+</script>
+
+</body>
+</html>
