@@ -43,6 +43,12 @@ header button{padding:7px 14px;border:none;border-radius:8px;font-family:inherit
 .btn-hdr{background:var(--surface2);color:var(--text);border:1px solid var(--border);}
 .btn-hdr:hover{background:var(--border);}
 
+/* LOGIN BUTTON */
+.btn-login{background:var(--surface2);color:var(--text2);border:1px solid var(--border);display:flex;align-items:center;gap:6px;}
+.btn-login:hover{background:var(--border);}
+.btn-login.logged-in{border-color:var(--green)!important;color:var(--green)!important;}
+.admin-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(63,185,80,.15);color:var(--green);border:1px solid rgba(63,185,80,.3);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;margin-left:4px;}
+
 .page-view{display:none;}
 .page-view.active{display:flex;height:calc(100vh - 55px);}
 
@@ -71,14 +77,29 @@ header button{padding:7px 14px;border:none;border-radius:8px;font-family:inherit
 
 /* STUDENT HEADER */
 .student-header{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:16px;box-shadow:var(--shadow);}
-.big-avatar{width:64px;height:64px;border-radius:50%;background:var(--surface2);border:3px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:var(--accent);cursor:pointer;overflow:hidden;position:relative;flex-shrink:0;}
+.big-avatar{width:64px;height:64px;border-radius:50%;background:var(--surface2);border:3px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:var(--accent);overflow:hidden;position:relative;flex-shrink:0;}
+.big-avatar.editable{cursor:pointer;}
 .big-avatar img{width:100%;height:100%;object-fit:cover;}
 .big-avatar .avatar-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;opacity:0;transition:.2s;font-size:16px;}
-.big-avatar:hover .avatar-overlay{opacity:1;}
-.student-meta input{background:none;border:none;color:var(--text);font-family:inherit;outline:none;}
-.meta-name{font-size:18px;font-weight:700;border-bottom:1px dashed transparent;}
-.meta-name:hover{border-bottom-color:var(--border);}
-.meta-id input{font-size:13px;color:var(--text2);}
+.big-avatar.editable:hover .avatar-overlay{opacity:1;}
+
+/* STUDENT META — view mode vs edit mode */
+.student-meta{flex:1;}
+.meta-view{display:flex;flex-direction:column;gap:3px;}
+.meta-view .mv-name{font-size:18px;font-weight:700;color:var(--text);}
+.meta-view .mv-info{font-size:12px;color:var(--text2);}
+.meta-edit{display:none;flex-direction:column;gap:6px;}
+.meta-edit input,.meta-edit select{background:var(--surface2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-family:inherit;font-size:13px;padding:6px 10px;outline:none;transition:.2s;width:100%;}
+.meta-edit input:focus,.meta-edit select:focus{border-color:var(--accent);}
+.meta-edit .edit-row{display:flex;gap:6px;}
+.meta-edit .edit-row input,.meta-edit .edit-row select{flex:1;}
+.meta-edit-actions{display:flex;gap:6px;margin-top:4px;}
+.btn-save-meta{background:var(--green);color:#fff;border:none;padding:5px 14px;border-radius:7px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;}
+.btn-cancel-meta{background:none;border:1px solid var(--border);color:var(--text2);padding:5px 10px;border-radius:7px;font-family:inherit;font-size:12px;cursor:pointer;}
+.btn-edit-info{background:none;border:1px solid var(--border);color:var(--text3);padding:4px 10px;border-radius:7px;font-family:inherit;font-size:11px;cursor:pointer;margin-top:5px;transition:.2s;}
+.btn-edit-info:hover{border-color:var(--accent);color:var(--accent);}
+.readonly-notice{font-size:11px;color:var(--text3);font-style:italic;margin-top:4px;}
+
 .tbm-badge{margin-left:auto;text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 20px;}
 .tbm-badge .label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
 .tbm-badge .score{font-size:28px;font-weight:800;}
@@ -94,7 +115,6 @@ header button{padding:7px 14px;border:none;border-radius:8px;font-family:inherit
 
 /* GRADE TABLE */
 .grade-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow);}
-/* Toolbar xóa toàn bộ */
 .grade-toolbar{display:flex;align-items:center;justify-content:flex-end;padding:8px 14px;border-bottom:1px solid var(--border);gap:8px;background:var(--surface2);}
 .btn-clear-all{background:none;border:1px solid var(--red);color:var(--red);border-radius:7px;padding:5px 13px;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;}
 .btn-clear-all:hover{background:rgba(248,81,73,.12);}
@@ -106,9 +126,9 @@ header button{padding:7px 14px;border:none;border-radius:8px;font-family:inherit
 .grade-table td.subject-name{text-align:left;padding-left:14px;font-size:13px;font-weight:500;white-space:nowrap;}
 .grade-table tr:last-child td{border-bottom:none;}
 .grade-table tr:hover td{background:rgba(88,166,255,.04);}
-.group-row td{background:var(--group-row)!important;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);padding:5px 14px!important;}
+/* REMOVED: .group-row — xóa label phân loại nhóm khoa */
 
-/* INPUT — no spinners */
+/* INPUT — no spinners, no placeholder numbers */
 .score-input{
   width:46px;padding:5px 3px;text-align:center;
   background:var(--surface2);border:1px solid var(--border);border-radius:6px;
@@ -121,16 +141,13 @@ header button{padding:7px 14px;border:none;border-radius:8px;font-family:inherit
 .score-input:focus{border-color:var(--accent);background:var(--input-focus);}
 .score-input:hover{border-color:var(--text3);}
 
-/* Input wrapper với nút xóa nhỏ */
 .inp-wrap{position:relative;display:inline-flex;align-items:center;}
 .inp-clear{position:absolute;right:-1px;top:-1px;width:14px;height:14px;background:var(--red);border:none;border-radius:50%;color:#fff;font-size:9px;font-weight:900;cursor:pointer;display:none;align-items:center;justify-content:center;line-height:1;padding:0;z-index:2;}
 .inp-wrap:hover .inp-clear.has-val{display:flex;}
 
-/* Clear row button */
 .btn-clear-row{background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;padding:3px 6px;border-radius:5px;transition:.15s;white-space:nowrap;}
 .btn-clear-row:hover{color:var(--red);background:rgba(248,81,73,.1);}
 
-/* DAT toggle */
 .dat-toggle{display:inline-flex;border-radius:6px;overflow:hidden;border:1px solid var(--border);}
 .dat-toggle button{padding:4px 8px;border:none;background:var(--surface2);color:var(--text3);font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;transition:.15s;white-space:nowrap;}
 .dat-toggle button.active-dat{background:var(--green);color:#fff;}
@@ -205,6 +222,9 @@ header button{padding:7px 14px;border:none;border-radius:8px;font-family:inherit
 .smartkey-hint{font-size:11px;color:var(--text3);margin-top:4px;}
 .sk-err{color:var(--red);font-size:11px;margin-top:4px;display:none;}
 
+/* LOGIN MODAL */
+.login-err{color:var(--red);font-size:12px;margin-top:8px;display:none;text-align:center;}
+
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
@@ -249,13 +269,18 @@ const SUBJECTS = [
 ];
 const TOTAL_SUBJECTS = SUBJECTS.length;
 
-// Hai smartkey hợp lệ
+// Admin credentials
+const ADMIN_EMAIL = 'bioverify@googlegroups.com';
+const ADMIN_PASS  = 'Thanh123@';
+
+// Smartkeys
 const SMARTKEYS = ['L9pHo3', 'Thành 123@'];
 function validKey(k){ return SMARTKEYS.includes(k.trim()); }
 
 let students = {};
 let activeId = null;
 let statFilterId = 'all';
+let isAdmin = false; // login state
 
 // ── THEME
 const savedTheme = localStorage.getItem('theme')||'dark';
@@ -269,6 +294,58 @@ document.getElementById('themeToggle').addEventListener('click', ()=>{
   document.getElementById('themeLabel').textContent = next==='dark'?'Tối':'Sáng';
 });
 document.getElementById('themeLabel').textContent = savedTheme==='dark'?'Tối':'Sáng';
+
+// ── LOGIN BUTTON
+document.getElementById('btnLogin').addEventListener('click', ()=>{
+  if(isAdmin){
+    // Logout
+    isAdmin = false;
+    updateAdminUI();
+    showToast('Đã đăng xuất');
+    renderAll();
+    return;
+  }
+  // Open login modal
+  document.getElementById('loginEmail').value='';
+  document.getElementById('loginPass').value='';
+  document.getElementById('loginErr').style.display='none';
+  document.getElementById('modalLogin').classList.add('show');
+  document.getElementById('loginEmail').focus();
+});
+
+document.getElementById('btnLoginCancel').addEventListener('click',()=>document.getElementById('modalLogin').classList.remove('show'));
+document.getElementById('btnLoginConfirm').addEventListener('click', doLogin);
+document.getElementById('loginPass').addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+
+function doLogin(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const errEl = document.getElementById('loginErr');
+  if(email===ADMIN_EMAIL && pass===ADMIN_PASS){
+    isAdmin = true;
+    document.getElementById('modalLogin').classList.remove('show');
+    updateAdminUI();
+    showToast('🎉 Xin chào, Quản Trị Viên!');
+    renderAll();
+  } else {
+    errEl.style.display='block';
+    errEl.textContent='⚠ Email hoặc mật khẩu không đúng!';
+  }
+}
+
+function updateAdminUI(){
+  const btn = document.getElementById('btnLogin');
+  const badge = document.getElementById('adminBadge');
+  if(isAdmin){
+    btn.textContent='🔓 Đăng xuất';
+    btn.classList.add('logged-in');
+    badge.style.display='inline-flex';
+  } else {
+    btn.textContent='🔑 Đăng nhập';
+    btn.classList.remove('logged-in');
+    badge.style.display='none';
+  }
+}
 
 // ── NAV TABS
 document.querySelectorAll('.nav-tab').forEach(tab=>{
@@ -347,7 +424,6 @@ function subjectCompletion(student){
   return {done, total:TOTAL_SUBJECTS};
 }
 
-// ── CLEAR HELPERS
 function clearSubjectScores(sid, subjId){
   if(!students[sid]) return;
   if(!students[sid].scores) students[sid].scores={};
@@ -390,12 +466,10 @@ function renderMain(){
   const tbm=calcTBMAll(s); const xl=xepLoai(tbm);
   const ini=initials(s.name);
 
-  let prevGroup=''; let rows='';
+  // Build rows — NO group-row labels, no placeholder numbers in inputs
+  let rows='';
   SUBJECTS.forEach(sub=>{
-    if(sub.group!==prevGroup){
-      rows+=`<tr class="group-row"><td colspan="6">${sub.group}</td></tr>`;
-      prevGroup=sub.group;
-    }
+    // Không render group-row nữa
     const sc=s.scores&&s.scores[sub.id]?s.scores[sub.id]:{tx:[],gk:'',ck:''};
 
     if(sub.type==='dat'){
@@ -426,11 +500,11 @@ function renderMain(){
     } else {
       const tx=sc.tx||[];
       const tbmVal=calcTBM(sc);
-      // Inputs không có spinner, mỗi input có nút × nhỏ
+      // placeholder="" — không có số
       const txInputs=[0,1,2,3].map(i=>{
         const v=tx[i]||'';
         return `<div class="inp-wrap">
-          <input class="score-input" type="number" inputmode="decimal" value="${v}" placeholder="${i+1}"
+          <input class="score-input" type="number" inputmode="decimal" value="${v}" placeholder=""
             data-type="tx" data-idx="${i}" data-subj="${sub.id}"
             style="width:46px;${scoreColor(v)}" title="TX${i+1}"/>
           <button class="inp-clear ${v!==''?'has-val':''}" data-subj="${sub.id}" data-type="tx" data-idx="${i}" title="Xóa ô này">×</button>
@@ -440,12 +514,12 @@ function renderMain(){
         <td class="subject-name">${sub.name}</td>
         <td style="padding:4px"><div style="display:flex;gap:3px;justify-content:center;flex-wrap:wrap">${txInputs}</div></td>
         <td style="padding:4px"><div class="inp-wrap">
-          <input class="score-input" type="number" inputmode="decimal" value="${sc.gk||''}" placeholder="—"
+          <input class="score-input" type="number" inputmode="decimal" value="${sc.gk||''}" placeholder=""
             data-type="gk" data-subj="${sub.id}" style="${scoreColor(sc.gk)}"/>
           <button class="inp-clear ${sc.gk!==''&&sc.gk!=null?'has-val':''}" data-subj="${sub.id}" data-type="gk" title="Xóa">×</button>
         </div></td>
         <td style="padding:4px"><div class="inp-wrap">
-          <input class="score-input" type="number" inputmode="decimal" value="${sc.ck||''}" placeholder="—"
+          <input class="score-input" type="number" inputmode="decimal" value="${sc.ck||''}" placeholder=""
             data-type="ck" data-subj="${sub.id}" style="${scoreColor(sc.ck)}"/>
           <button class="inp-clear ${sc.ck!==''&&sc.ck!=null?'has-val':''}" data-subj="${sub.id}" data-type="ck" title="Xóa">×</button>
         </div></td>
@@ -455,17 +529,45 @@ function renderMain(){
     }
   });
 
+  // Student header — view mode by default, edit mode only for admin
+  const avatarClass = isAdmin ? 'big-avatar editable' : 'big-avatar';
+  const avatarFileInput = isAdmin ? `<input type="file" id="avatarFile" accept="image/*" style="display:none"/>` : '';
+  const avatarOverlay = isAdmin ? `<div class="avatar-overlay">📷</div>` : '';
+
+  const metaViewHtml = `
+    <div class="meta-view" id="metaView">
+      <div class="mv-name">${s.name}</div>
+      <div class="mv-info">MSHS: <b>${s.mshs||'—'}</b> &nbsp;·&nbsp; Ngày sinh: <b>${s.dob||'—'}</b> &nbsp;·&nbsp; Giới tính: <b>${s.gender||'—'}</b></div>
+      ${isAdmin
+        ? `<button class="btn-edit-info" id="btnEditInfo">✏️ Chỉnh sửa thông tin</button>`
+        : `<span class="readonly-notice">🔒 Đăng nhập để chỉnh sửa thông tin</span>`}
+    </div>
+    <div class="meta-edit" id="metaEdit">
+      <input id="editName" value="${s.name}" placeholder="Họ và tên" type="text"/>
+      <div class="edit-row">
+        <input id="editMshs" value="${s.mshs||''}" placeholder="Mã số học sinh" type="text"/>
+        <input id="editDob" value="${s.dob||''}" placeholder="Ngày sinh" type="text"/>
+      </div>
+      <select id="editGender">
+        <option value="">— Giới tính —</option>
+        <option value="Nam" ${s.gender==='Nam'?'selected':''}>Nam</option>
+        <option value="Nữ" ${s.gender==='Nữ'?'selected':''}>Nữ</option>
+        <option value="Khác" ${s.gender==='Khác'?'selected':''}>Khác</option>
+      </select>
+      <div class="meta-edit-actions">
+        <button class="btn-save-meta" id="btnSaveMeta">💾 Lưu</button>
+        <button class="btn-cancel-meta" id="btnCancelMeta">Hủy</button>
+      </div>
+    </div>`;
+
   area.innerHTML=`
   <div class="student-header">
-    <div class="big-avatar" id="bigAvatar" title="Đổi ảnh">
+    <div class="${avatarClass}" id="bigAvatar" title="${isAdmin?'Đổi ảnh':''}">
       ${s.avatar?`<img src="${s.avatar}" alt=""/>`:`<span>${ini}</span>`}
-      <div class="avatar-overlay">📷</div>
-      <input type="file" id="avatarFile" accept="image/*" style="display:none"/>
+      ${avatarOverlay}
+      ${avatarFileInput}
     </div>
-    <div class="student-meta">
-      <input class="meta-name" id="editName" value="${s.name}" placeholder="Họ và tên"/>
-      <div class="meta-id"><input id="editMshs" value="${s.mshs||''}" placeholder="Mã số học sinh"/></div>
-    </div>
+    <div class="student-meta">${metaViewHtml}</div>
     <div class="tbm-badge">
       <div class="label">Điểm TBM</div>
       <div class="score ${xl.cls}" id="totalTbm">${tbm||'—'}</div>
@@ -498,22 +600,38 @@ function renderMain(){
     </table>
   </div>`;
 
-  // Meta edits
-  document.getElementById('editName').addEventListener('change',e=>{
-    students[activeId].name=e.target.value.trim()||students[activeId].name;
-    saveStudent(activeId); renderSidebar();
-  });
-  document.getElementById('editMshs').addEventListener('change',e=>{
-    students[activeId].mshs=e.target.value.trim();
-    saveStudent(activeId); renderSidebar();
-  });
-  document.getElementById('bigAvatar').addEventListener('click',()=>document.getElementById('avatarFile').click());
-  document.getElementById('avatarFile').addEventListener('change',e=>{
-    const file=e.target.files[0]; if(!file) return;
-    const reader=new FileReader();
-    reader.onload=ev=>{ students[activeId].avatar=ev.target.result; saveStudent(activeId); renderAll(); };
-    reader.readAsDataURL(file);
-  });
+  // ── Admin: avatar change
+  if(isAdmin){
+    document.getElementById('bigAvatar').addEventListener('click',()=>document.getElementById('avatarFile').click());
+    document.getElementById('avatarFile').addEventListener('change',e=>{
+      const file=e.target.files[0]; if(!file) return;
+      const reader=new FileReader();
+      reader.onload=ev=>{ students[activeId].avatar=ev.target.result; saveStudent(activeId); renderAll(); };
+      reader.readAsDataURL(file);
+    });
+
+    // Toggle edit mode
+    document.getElementById('btnEditInfo').addEventListener('click',()=>{
+      document.getElementById('metaView').style.display='none';
+      document.getElementById('metaEdit').style.display='flex';
+      document.getElementById('editName').focus();
+    });
+    document.getElementById('btnCancelMeta').addEventListener('click',()=>{
+      document.getElementById('metaEdit').style.display='none';
+      document.getElementById('metaView').style.display='flex';
+    });
+    document.getElementById('btnSaveMeta').addEventListener('click',()=>{
+      const newName = document.getElementById('editName').value.trim();
+      if(!newName){ showToast('Họ tên không được để trống!', true); return; }
+      students[activeId].name   = newName;
+      students[activeId].mshs   = document.getElementById('editMshs').value.trim();
+      students[activeId].dob    = document.getElementById('editDob').value.trim();
+      students[activeId].gender = document.getElementById('editGender').value;
+      saveStudent(activeId);
+      renderAll();
+      showToast('✓ Đã cập nhật thông tin học sinh');
+    });
+  }
 
   // Xóa toàn bộ điểm
   document.getElementById('btnClearAll').addEventListener('click',()=>{
@@ -523,7 +641,7 @@ function renderMain(){
     showToast('✓ Đã xóa toàn bộ điểm');
   });
 
-  // Xóa điểm từng môn (nút 🗑 trên mỗi hàng)
+  // Xóa điểm từng môn
   area.querySelectorAll('.btn-clear-row').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const subjId=btn.dataset.subj;
@@ -535,7 +653,7 @@ function renderMain(){
     });
   });
 
-  // Xóa từng ô × nhỏ
+  // Xóa từng ô ×
   area.querySelectorAll('.inp-clear').forEach(btn=>{
     btn.addEventListener('click',e=>{
       e.preventDefault();
@@ -546,11 +664,9 @@ function renderMain(){
       if(type==='tx'){ if(!sc.tx)sc.tx=[]; sc.tx[parseInt(idx)]=''; }
       else if(type==='gk') sc.gk='';
       else sc.ck='';
-      // update input trong DOM
       const inp=btn.previousElementSibling;
       if(inp){ inp.value=''; inp.style=''; }
       btn.classList.remove('has-val');
-      // recalc TBM
       const tv=calcTBM(sc);
       const cell=document.getElementById(`tbm-${subj}`);
       if(cell){ cell.textContent=isNaN(tv)||parseFloat(tv)===0?'—':tv; cell.style=scoreColor(tv); }
@@ -587,9 +703,8 @@ function renderMain(){
     });
   });
 
-  // Score inputs — chỉ nhận số, không spinner
+  // Score inputs
   area.querySelectorAll('.score-input').forEach(inp=>{
-    // Chặn ký tự không phải số hoặc dấu chấm
     inp.addEventListener('keydown',e=>{
       const allowed=['Backspace','Delete','ArrowLeft','ArrowRight','Tab','.'];
       if(!allowed.includes(e.key)&&(isNaN(e.key)||e.key===' ')) e.preventDefault();
@@ -605,7 +720,6 @@ function renderMain(){
       else if(type==='gk') sc.gk=val;
       else sc.ck=val;
       el.style=scoreColor(val);
-      // cập nhật nút × kề bên
       const clr=el.nextElementSibling;
       if(clr) val!==''?clr.classList.add('has-val'):clr.classList.remove('has-val');
       const tv=calcTBM(sc);
@@ -620,7 +734,7 @@ function renderMain(){
     });
   });
 
-  // Export — yêu cầu smartkey
+  // Export
   document.getElementById('btnExPdf').addEventListener('click',()=>openExportModal('pdf', activeId));
   document.getElementById('btnExTxt').addEventListener('click',()=>openExportModal('txt', activeId));
   document.getElementById('btnExMail').addEventListener('click',()=>openExportModal('mail', activeId));
@@ -647,7 +761,7 @@ async function deleteStudent(id){
   catch(e){ showToast('⚠ Lỗi xóa',true); }
 }
 
-// ── EXPORT MODAL CHUNG (có smartkey)
+// ── EXPORT MODAL
 let _exportMode=null; let _exportStudentId=null;
 function openExportModal(mode, id){
   _exportMode=mode; _exportStudentId=id;
@@ -678,7 +792,6 @@ document.getElementById('btnExportConfirm').addEventListener('click',()=>{
 });
 document.getElementById('btnExportCancel').addEventListener('click',()=>document.getElementById('modalExport').classList.remove('show'));
 
-// ── BUILD EXPORT ROWS
 function buildExportRows(s){
   let rows=[];
   SUBJECTS.forEach(sub=>{
@@ -695,16 +808,13 @@ function buildExportRows(s){
   return rows;
 }
 
-// ── EXPORT PDF
 function exportPDF(id){
   const s=students[id]; if(!s) return;
   const total=calcTBMAll(s); const xl=xepLoai(total); const now=new Date().toLocaleString('vi-VN');
   const xlColor=xl.cls==='tbm-good'?'#1a7f37':xl.cls==='tbm-ok'?'#9a6700':'#cf222e';
   const av=s.avatar?`<img src="${s.avatar}" class="avatar" alt=""/>`:`<div class="avatar-init">${initials(s.name)}</div>`;
-  let bodyRows=''; let prevGroup='';
-  buildExportRows(s).forEach((row,i)=>{
-    const sub=SUBJECTS[i];
-    if(sub.group!==prevGroup){ bodyRows+=`<tr class="grp"><td colspan="5">${sub.group}</td></tr>`; prevGroup=sub.group; }
+  let bodyRows='';
+  buildExportRows(s).forEach(row=>{
     const tdTBM=row.isDat?(row.tbm==='Đ'?'<span class="dat">Đ</span>':row.tbm==='CĐ'?'<span class="chuadat">CĐ</span>':'—'):`<span class="${parseFloat(row.tbm)>=8?'good':parseFloat(row.tbm)>=6.5?'ok':'bad'}">${row.tbm}</span>`;
     bodyRows+=`<tr><td class="sname">${row.name}</td><td>${row.ddgtx}</td><td>${row.gk}</td><td>${row.ck}</td><td class="tbmc">${tdTBM}</td></tr>`;
   });
@@ -723,7 +833,6 @@ function exportPDF(id){
 table{width:100%;border-collapse:collapse;font-size:13px;}
 th{background:#eaf0f8;padding:8px 7px;font-size:10px;font-weight:700;text-align:center;color:#656d76;text-transform:uppercase;border-bottom:2px solid #d1d9e0;white-space:nowrap;}th.sl{text-align:left;padding-left:12px;}
 td{border-bottom:1px solid #eaecef;padding:6px 5px;text-align:center;}td.sname{text-align:left;padding-left:12px;font-weight:500;}td.tbmc{font-weight:700;}
-tr.grp td{background:#f0f2f5;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9198a1;padding:5px 12px;}
 .good{color:#1a7f37;font-weight:700;}.ok{color:#9a6700;font-weight:700;}.bad{color:#cf222e;font-weight:700;}
 .dat{background:#d4f7dc;color:#1a7f37;border-radius:4px;padding:1px 8px;font-weight:800;}
 .chuadat{background:#ffd6d6;color:#cf222e;border-radius:4px;padding:1px 8px;font-weight:800;}
@@ -731,7 +840,7 @@ tr.grp td{background:#f0f2f5;font-size:10px;font-weight:700;text-transform:upper
 .btns{text-align:center;padding:16px 0 4px;}
 .btn-p{background:#0969da;color:#fff;border:none;padding:9px 24px;border-radius:8px;font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;margin:0 5px;}
 .btn-c{background:#eaecef;color:#1f2328;border:none;padding:9px 18px;border-radius:8px;font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;}
-@media print{body{background:#fff;padding:0;}.page{box-shadow:none;border-radius:0;}.btns,.note{display:none;}.top-bar,tr.grp td,th{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+@media print{body{background:#fff;padding:0;}.page{box-shadow:none;border-radius:0;}.btns,.note{display:none;}.top-bar,th{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
 </style></head><body><div class="page">
 <div class="top-bar">${av}<div class="info"><div class="name">${s.name}</div><div class="meta">MSHS: ${s.mshs||'—'} | ${s.dob||''} | ${s.gender||''} | Xuất: ${now}</div></div>
 <div class="badge"><div class="lbl">Điểm TBM</div><div class="score">${total||'—'}</div><div class="xl">${xl.label}</div></div></div>
@@ -747,7 +856,6 @@ tr.grp td{background:#f0f2f5;font-size:10px;font-weight:700;text-transform:upper
   showToast('Đang mở bảng điểm PDF...');
 }
 
-// ── EXPORT TXT
 function exportTXT(id){
   const s=students[id]; if(!s) return;
   const total=calcTBMAll(s); const xl=xepLoai(total); const now=new Date().toLocaleString('vi-VN');
@@ -761,7 +869,6 @@ function exportTXT(id){
   a.click(); showToast('✓ Đã tải file TXT');
 }
 
-// ── MAIL EXPORT
 function doMailExport(id, addr){
   const s=students[id]; if(!s) return;
   const total=calcTBMAll(s); const xl=xepLoai(total); const now=new Date().toLocaleString('vi-VN');
@@ -923,6 +1030,8 @@ loadStudents();
     <div class="toggle-track"><div class="toggle-thumb"></div></div>
     <span style="font-size:12px;color:var(--text2);font-weight:600" id="themeLabel">Tối</span>
   </div>
+  <span class="admin-badge" id="adminBadge" style="display:none">👑 Quản Trị Viên</span>
+  <button class="btn-hdr btn-login" id="btnLogin">🔑 Đăng nhập</button>
   <button class="btn-hdr" id="btnAdd">+ Thêm học sinh</button>
 </header>
 
@@ -965,7 +1074,7 @@ loadStudents();
   </div>
 </div>
 
-<!-- Modal Export chung (có smartkey) -->
+<!-- Modal Export -->
 <div class="modal-overlay" id="modalExport">
   <div class="modal">
     <h3 id="exportModalTitle">Xuất dữ liệu</h3>
@@ -980,6 +1089,22 @@ loadStudents();
     <div class="modal-actions">
       <button class="btn-cancel-m" id="btnExportCancel">Hủy</button>
       <button class="btn-primary" id="btnExportConfirm">Xác nhận</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Đăng nhập -->
+<div class="modal-overlay" id="modalLogin">
+  <div class="modal">
+    <h3>🔑 Đăng nhập Quản Trị</h3>
+    <label>Email</label>
+    <input id="loginEmail" placeholder="email@example.com" type="email" autocomplete="username"/>
+    <label>Mật khẩu</label>
+    <input id="loginPass" placeholder="••••••••" type="password" autocomplete="current-password"/>
+    <p class="login-err" id="loginErr"></p>
+    <div class="modal-actions">
+      <button class="btn-cancel-m" id="btnLoginCancel">Hủy</button>
+      <button class="btn-primary" id="btnLoginConfirm">Đăng nhập</button>
     </div>
   </div>
 </div>
